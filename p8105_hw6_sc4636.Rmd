@@ -61,6 +61,7 @@ bwt %>%
 Model 1 is proposed in interest of exploring the relationship between mother's status and their baby's birth weight. Important predictors include mother's race, age, smoking status and weight gain during pregnancy. In addition, baby's gender and gestational age are included in the model since they are important confounders given previous studies. Other factors related to mother's status such as mother's height, menarch age and BMI are excluded since they are unlikely to be relevant. Also, mother's weight before pregnancy and at delivery are not considered since weight gain concludes the difference between them. In conclusion, 6 predictors are used in model 1 to predict baby's birthweight.
 
 ```{r}
+set.seed(37)
 cv_bwt = crossv_mc(bwt, nrow(bwt))
 
 cv_bwt = 
@@ -107,6 +108,7 @@ weather_df =
 ```
 
 ```{r bootstraping, warning = FALSE}
+set.seed(37)
 boot = weather_df %>% 
   bootstrap(n = 5000) %>% 
   mutate(
@@ -125,20 +127,20 @@ boot = weather_df %>%
 boot %>% ggplot(aes(x = log)) + 
   geom_density() +
   labs(
-    title = "Distribution of log(β0 * β1)",
+    title = "Fig 3. Distribution of log(β0 * β1)",
     x = "log(β0 * β1)",
     y = "Density"
   )
 boot %>% ggplot(aes(x = r.squared)) + 
   geom_density() +
   labs(
-    title = "Distribution of r squared",
+    title = "Fig 4. Distribution of r squared",
     x = "r squared",
     y = "Density"
   )
 ```
 
-Both log(β0 * β1) and r squared are likely to be normally distributed.
+According to figure 3 and 4, both log(β0 * β1) and r squared are likely to be normally distributed. Sampling distribution of log(β0 * β1) has a mean of `r boot %>% pull(log) %>% mean()` and standard deviation of `r boot %>% pull(log) %>% sd()`. Sampling distribution of r squared has a mean of `r boot %>% pull(r.squared) %>% mean()` and standard deviation of `r boot %>% pull(r.squared) %>% sd()`.
 
 ```{r}
 boot %>% summarize(
